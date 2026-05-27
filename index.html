@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Nova TV - Premium Live Streaming</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- HLS Player Library -->
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    
+    <!-- Custom Style -->
+    <link rel="stylesheet" href="style.css" />
+  </head>
+
+  <body>
+    <!-- Animated background mesh -->
+    <div class="bg-mesh">
+      <div class="glow-orb orb-1"></div>
+      <div class="glow-orb orb-2"></div>
+      <div class="glow-orb orb-3"></div>
+    </div>
+
+    <div class="app-container">
+      
+      <!-- LEFT SECTION: PLAYER & METADATA -->
+      <aside class="player-section">
+        <header class="header">
+          <h1 class="logo">Nova <span>TV</span></h1>
+        </header>
+
+        <div class="player-wrapper">
+          <video id="video" autoplay controls playsinline></video>
+          
+          <!-- Neon Loading Spinner -->
+          <div id="playerLoader" class="player-loader hidden">
+            <div class="spinner"></div>
+            <span>Buffering stream...</span>
+          </div>
+
+          <!-- Custom Control Bar Overlay -->
+          <div class="custom-controls" id="customControls">
+            <button class="control-btn" onclick="prevChannel()" title="Previous Channel">⏮</button>
+            <button class="control-btn play-pause-btn" onclick="togglePlay()" title="Play/Pause">⏯</button>
+            <button class="control-btn" onclick="nextChannel()" title="Next Channel">⏭</button>
+          </div>
+        </div>
+
+        <!-- Current Channel Info Card -->
+        <div class="current-channel-card" id="currentChannelCard">
+          <div class="current-channel-logo-container">
+            <div id="currentChannelFallback" class="fallback-avatar hidden">N</div>
+            <img id="currentChannelLogo" src="" alt="" onerror="handleCurrentLogoError()">
+          </div>
+          <div class="current-channel-details">
+            <span class="live-badge">
+              <span class="live-dot"></span> LIVE
+            </span>
+            <h2 id="currentChannelTitle">Select a channel</h2>
+            <p id="currentChannelCategory">M3U Stream Player</p>
+          </div>
+        </div>
+
+        <footer class="footer">
+          © 2026 <span class="accent-text">Nova TV</span>. All rights reserved.
+        </footer>
+      </aside>
+
+      <!-- RIGHT SECTION: CHANNELS, FILTERS & SEARCH -->
+      <main class="channels-section">
+        <!-- Search & Control Header -->
+        <div class="search-filter-sticky">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input
+              type="text"
+              id="search"
+              placeholder="Search among all channels..."
+              onkeyup="searchChannels()"
+            />
+            <button class="clear-search-btn" id="clearSearch" onclick="clearSearchInput()" style="display: none;">✕</button>
+          </div>
+
+          <!-- Category Pill Filter List -->
+          <div class="categories-container">
+            <div class="category-list" id="categoryList">
+              <button class="category-pill active" onclick="filterCategory('All')">All Channels</button>
+              <!-- Dynamic category pills will be inserted here -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Channels Grid -->
+        <div class="channels-grid-wrapper">
+          <div class="channel-grid" id="channelGrid">
+            <!-- Dynamic channel cards will be inserted here -->
+          </div>
+          <div id="noResults" class="no-results-msg hidden">
+            <span>📺</span>
+            <p>No channels found matching your search</p>
+          </div>
+        </div>
+      </main>
+
+    </div>
+
+    <!-- Custom Logic -->
+    <script src="script.js"></script>
+  </body>
+</html>
