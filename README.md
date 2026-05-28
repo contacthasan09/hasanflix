@@ -48,7 +48,7 @@
 
 # 📱 Responsive Preview
 
-## 💻 Desktop View
+<!-- ## 💻 Desktop View
 
 <p align="center">
   <img src="https://i.postimg.cc/PfZ7Z99B/PC-Main-header.png" alt="Desktop Preview">
@@ -56,7 +56,7 @@
 
 <p align="center">
   <i>Device name: Computer Desktop</i>
-</p>
+</p> -->
 
 ---
 
