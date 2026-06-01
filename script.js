@@ -617,9 +617,21 @@ function scrollCategories(direction) {
 /* LIVE VISITOR AND TOTAL VISITS STATS LOGIC */
 function setupLiveStats() {
   const liveCountEl = document.getElementById("liveCount");
+  const headerLiveCountEl = document.getElementById("headerLiveCount");
   const totalCountEl = document.getElementById("totalCount");
+  const headerTotalCountEl = document.getElementById("headerTotalCount");
   
-  if (!liveCountEl || !totalCountEl) return;
+  if (!totalCountEl) return;
+
+  const updateLiveUI = (val) => {
+    if (liveCountEl) liveCountEl.innerText = val.toLocaleString();
+    if (headerLiveCountEl) headerLiveCountEl.innerText = val.toLocaleString();
+  };
+
+  const updateTotalUI = (val) => {
+    if (totalCountEl) totalCountEl.innerText = val.toLocaleString();
+    if (headerTotalCountEl) headerTotalCountEl.innerText = val.toLocaleString();
+  };
 
   // 1. Total Visits Logic (Persist using localStorage)
   const baseVisits = 9850; // Started around 10k as requested
@@ -634,12 +646,12 @@ function setupLiveStats() {
   // Increment visit by 1 for current session/page load
   storedVisits += 1;
   localStorage.setItem("alpha_tv_total_visits_v2", storedVisits);
-  totalCountEl.innerText = storedVisits.toLocaleString();
+  updateTotalUI(storedVisits);
 
   // 2. Live Watching Logic (Simulate realistic fluctuations)
   // Start with a random number between 85 and 145
   let liveCount = Math.floor(Math.random() * (145 - 85 + 1)) + 85;
-  liveCountEl.innerText = liveCount.toLocaleString();
+  updateLiveUI(liveCount);
 
   // Update live watching stats every 4 seconds (fluctuate between -3 and +3)
   setInterval(() => {
@@ -650,13 +662,13 @@ function setupLiveStats() {
     if (liveCount < 70) liveCount = 70;
     if (liveCount > 180) liveCount = 180;
     
-    liveCountEl.innerText = liveCount.toLocaleString();
+    updateLiveUI(liveCount);
 
     // Occasional global visit increment simulation (e.g. 35% chance every 4s)
     if (Math.random() < 0.35) {
       storedVisits += 1;
       localStorage.setItem("alpha_tv_total_visits_v2", storedVisits);
-      totalCountEl.innerText = storedVisits.toLocaleString();
+      updateTotalUI(storedVisits);
     }
   }, 4000);
 }

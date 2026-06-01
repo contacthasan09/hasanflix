@@ -1225,9 +1225,70 @@ video {
   text-align: center;
   font-family: 'Poppins', sans-serif !important;
 }
+/* HEADER LIVE BADGE DEFAULT */
+.header-live-badge {
+  display: none;
+}
 
-/* RESPONSIVE FOOTER */
+/* RESPONSIVE OVERRIDES */
 @media (max-width: 768px) {
+  .player-section {
+    padding: 15px 15px 8px 15px;
+  }
+
+  .current-channel-card {
+    margin-top: 10px;
+    padding: 12px;
+  }
+
+  .stats-card {
+    display: none !important;
+  }
+
+  .header-live-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-color);
+    padding: 5px 10px;
+    border-radius: 30px;
+    font-family: var(--font-poppins);
+    font-size: 11px;
+    font-weight: 600;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  .header-stat-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: var(--text-secondary);
+  }
+
+  .header-stat-item:first-child {
+    color: var(--success);
+  }
+
+  .header-stat-item:last-child {
+    color: var(--secondary);
+  }
+
+  .header-ping {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: var(--success);
+    box-shadow: 0 0 8px var(--success);
+    animation: liveDotPulse 1.2s infinite alternate;
+  }
+
+  .header-stat-divider {
+    width: 1px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
   .footer-content {
     flex-direction: column;
     text-align: center;
@@ -1252,7 +1313,7 @@ video {
 
 /* SIDEBAR STATS CARD */
 .stats-card {
-  margin-top: auto; /* Push it towards the footer, or just below current card */
+  margin-top: 24px;
   margin-bottom: 10px;
   background: var(--bg-card);
   border: 1px solid var(--border-color);
