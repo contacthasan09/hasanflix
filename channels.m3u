@@ -416,6 +416,8 @@ https://vods2.aynaott.com/hindimovies/index.m3u8
 http://awaazindia.livebox.co.in/AwaazIndaTVhls/Live.m3u8
 #EXTINF:-1 tvg-logo="https://i.postimg.cc/XYwb6R0c/download.png" group-title="Kids",Cartoon Network HD+
 http://198.195.239.50:8095/CartoonNetwork/index.m3u8
+#EXTINF:-1 tvg-logo="https://s3.aynaott.com/storage/a89142109d049ae325fd1681b50bfffb" group-title="Kids",Cartoon Network
+https://tvsen5.aynaott.com/cartoonnetwork/index.m3u8?e=1780236747&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=484b95438082f7b95ea41ae6f1f6a701
 #EXTINF:-1 tvg-logo="https://s3.aynaott.com/storage/31a070024b6516e3738baec70168f0b6" group-title="Kids",Disney JR
 https://tvsen7.aynaott.com/disneyjr/index.m3u8?e=1779283918&u=78be6644-0a65-48ec-81a4-089ac65a2619&token=5269dc1176c26984cb3eff6a2c891c14
 #EXTINF:-1 tvg-logo="https://s3.aynaott.com/storage/a130687320f6b07db4bc3729b9d5e96e" group-title="Kids",Nicktoons
