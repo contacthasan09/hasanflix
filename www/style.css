@@ -700,6 +700,27 @@ video {
   box-shadow: 0 0 20px var(--primary-glow);
 }
 
+.category-count {
+  margin-left: 6px;
+  font-size: 11px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 2px 7px;
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  transition: var(--transition-normal);
+}
+
+.category-pill:hover .category-count {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.category-pill.active .category-count {
+  background: rgba(255, 255, 255, 0.2);
+  color: #fff;
+}
+
 /* CHANNELS GRID WRAPPER */
 .channels-grid-wrapper {
   flex: 1;

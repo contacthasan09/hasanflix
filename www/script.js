@@ -204,18 +204,23 @@ function loadPlaylist() {
 /* RENDER CATEGORY FILTER PILLS */
 function renderCategories() {
   const container = document.getElementById("categoryList");
-  container.innerHTML = `<button class="category-pill active" data-category="All" onclick="filterCategory('All', this)">All Channels</button>`;
-
-  // Extract unique categories
-  const categoriesSet = new Set();
+  
+  // Extract unique categories and count channels in each
+  const categoryCounts = {};
   channels.forEach(ch => {
     if (ch.categories) {
       ch.categories.forEach(cat => {
-        if (cat) categoriesSet.add(cat);
+        if (cat) {
+          categoryCounts[cat] = (categoryCounts[cat] || 0) + 1;
+        }
       });
     }
   });
-  const categories = [...categoriesSet];
+
+  const allCount = channels.length;
+  container.innerHTML = `<button class="category-pill active" data-category="All" onclick="filterCategory('All', this)">All Channels <span class="category-count">${allCount}</span></button>`;
+
+  const categories = Object.keys(categoryCounts);
 
   // Sort: Bangla first, news/sports next, rest alphabetical
   categories.sort((a, b) => {
@@ -236,9 +241,9 @@ function renderCategories() {
   categories.forEach(cat => {
     const btn = document.createElement("button");
     btn.className = "category-pill";
-    btn.innerText = cat;
+    btn.innerHTML = `${cat} <span class="category-count">${categoryCounts[cat]}</span>`;
     btn.dataset.category = cat;
-    btn.onclick = (e) => filterCategory(cat, e.target);
+    btn.onclick = () => filterCategory(cat, btn);
     container.appendChild(btn);
   });
 
