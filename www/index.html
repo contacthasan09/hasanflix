@@ -53,17 +53,12 @@
             <h1 class="logo">Alpha <span>TV</span></h1>
           </div>
 
-          <!-- Mini Live Counter (Visible on mobile only) -->
-          <div class="header-live-badge">
-            <div class="header-stat-item">
-              <span class="header-ping"></span>
-              <i class="fa-solid fa-eye"></i>
-              <span id="headerLiveCount">--</span>
-            </div>
-            <div class="header-stat-divider"></div>
-            <div class="header-stat-item">
-              <i class="fa-solid fa-users"></i>
-              <span id="headerTotalCount">--</span>
+          <div class="header-right-widgets">
+            <!-- View Mode Toggle (2D / 3D) -->
+            <div class="view-toggle-container">
+              <div class="view-toggle-slider" id="viewToggleSlider"></div>
+              <button class="view-toggle-btn active" id="btnToggle3D" onclick="setViewMode('3d')">3D</button>
+              <button class="view-toggle-btn" id="btnToggle2D" onclick="setViewMode('2d')">2D</button>
             </div>
           </div>
         </header>
@@ -126,9 +121,24 @@
             />
           </div>
           <div class="current-channel-details">
-            <span class="live-badge">
-              <span class="live-dot"></span> LIVE
-            </span>
+            <div class="current-channel-meta-row">
+              <span class="live-badge">
+                <span class="live-dot"></span> LIVE
+              </span>
+              <!-- Mini Live Counter (Visible on mobile only, aligned side-by-side with LIVE badge) -->
+              <div class="header-live-badge">
+                <div class="header-stat-item">
+                  <span class="header-ping"></span>
+                  <i class="fa-solid fa-eye"></i>
+                  <span id="headerLiveCount">--</span>
+                </div>
+                <div class="header-stat-divider"></div>
+                <div class="header-stat-item">
+                  <i class="fa-solid fa-users"></i>
+                  <span id="headerTotalCount">--</span>
+                </div>
+              </div>
+            </div>
             <h2 id="currentChannelTitle">Select a channel</h2>
             <p id="currentChannelCategory">M3U Stream Player</p>
           </div>

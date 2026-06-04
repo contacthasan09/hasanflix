@@ -1,5 +1,5 @@
 /* VARIABLES */
-const playlistOnline = "https://raw.githubusercontent.com/Shariar-Ahamed/online-tv-streaming-platform/main/channels.m3u";
+const playlistOnline = "channels.m3u";
 const playlistLocal = "channels.m3u";
 
 let channels = [];
@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupExternalLinks();
   setupBackToTop();
   setupFooterFeatures();
+  setupViewModeToggle();
 });
 
 /* DETECT NATIVE FULLSCREEN EXIT TO UNLOCK ORIENTATION & HANDLE BACK BUTTON */
@@ -913,3 +914,45 @@ window.addEventListener("keydown", (e) => {
     closeInfoModal();
   }
 });
+
+/* 2D / 3D VIEW TOGGLE LOGIC */
+function setViewMode(mode) {
+  const body = document.body;
+  const container = document.querySelector(".view-toggle-container");
+  const btn3D = document.getElementById("btnToggle3D");
+  const btn2D = document.getElementById("btnToggle2D");
+  
+  if (!container || !btn3D || !btn2D) return;
+  
+  // Temporarily disable transitions during layout mode switch
+  body.classList.add('no-transition');
+  
+  if (mode === '2d') {
+    body.classList.remove('mode-3d');
+    body.classList.add('mode-2d');
+    container.classList.add('mode-2d');
+    btn2D.classList.add('active');
+    btn3D.classList.remove('active');
+    localStorage.setItem('viewMode', '2d');
+  } else {
+    body.classList.remove('mode-2d');
+    body.classList.add('mode-3d');
+    container.classList.remove('mode-2d');
+    btn3D.classList.add('active');
+    btn2D.classList.remove('active');
+    localStorage.setItem('viewMode', '3d');
+  }
+  
+  // Force reflow
+  body.offsetHeight;
+  
+  // Re-enable transitions after the switch
+  setTimeout(() => {
+    body.classList.remove('no-transition');
+  }, 150);
+}
+
+function setupViewModeToggle() {
+  const savedMode = localStorage.getItem('viewMode') || '3d';
+  setViewMode(savedMode);
+}

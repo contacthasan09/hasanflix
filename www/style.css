@@ -31,6 +31,11 @@
   --blur-amount: 16px;
 }
 
+/* Helper class to temporarily disable transitions on layout change */
+body.no-transition *:not(.view-toggle-container):not(.view-toggle-slider):not(.view-toggle-btn) {
+  transition: none !important;
+}
+
 /* RESET */
 * {
   margin: 0;
@@ -138,7 +143,11 @@ body {
 
 /* LOGO & HEADER */
 .header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-bottom: 25px;
+  gap: 15px;
 }
 
 .logo-container {
@@ -400,6 +409,7 @@ video {
   max-width: 100%;
   max-height: 100%;
   object-fit: contain;
+  border-radius: 10px;
 }
 
 .fallback-avatar {
@@ -417,11 +427,19 @@ video {
   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
 }
 
+.current-channel-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 2px;
+}
+
 .current-channel-details {
   display: flex;
   flex-direction: column;
   gap: 6px;
   min-width: 0; /* allows text truncation */
+  flex-grow: 1;
 }
 
 .current-channel-details h2 {
@@ -790,6 +808,7 @@ video {
   object-fit: contain;
   transition: var(--transition-normal);
   filter: drop-shadow(0 5px 8px rgba(0, 0, 0, 0.3));
+  border-radius: 10px;
 }
 
 .channel:hover img {
@@ -1522,6 +1541,7 @@ video {
     font-size: 11px;
     font-weight: 600;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    margin-left: auto;
   }
 
   .header-stat-item {
@@ -1826,3 +1846,340 @@ video {
 .custom-modal-btn:active {
   transform: translateY(0);
 }
+
+/* ==========================================
+   VIEW MODE TOGGLE SWITCH
+   ========================================== */
+.header-right-widgets {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
+}
+
+.view-toggle-container {
+  position: relative;
+  display: flex;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 3px;
+  border-radius: 30px;
+  width: 90px;
+  height: 30px;
+  align-items: center;
+  overflow: hidden;
+}
+
+.view-toggle-slider {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 41px;
+  height: 24px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+  box-shadow: 0 4px 10px rgba(255, 0, 127, 0.3);
+  transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), background 0.3s ease;
+  z-index: 1;
+}
+
+/* 2D Mode active: slide to right and change gradient to Purple-to-Pink (Reversed 3D colors) */
+.view-toggle-container.mode-2d .view-toggle-slider {
+  transform: translateX(43px);
+  background: linear-gradient(135deg, var(--accent) 0%, var(--primary) 100%);
+  box-shadow: 0 4px 10px rgba(155, 81, 224, 0.2), 0 4px 10px rgba(255, 0, 127, 0.25);
+}
+
+.view-toggle-btn {
+  position: relative;
+  flex: 1;
+  background: none;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 10px;
+  font-weight: 700;
+  font-family: var(--font-display);
+  cursor: pointer;
+  z-index: 2;
+  text-align: center;
+  line-height: 24px;
+  transition: color 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.view-toggle-btn.active {
+  color: #ffffff;
+}
+
+/* Adjust header spacing on mobile to fit toggle */
+@media (max-width: 1024px) {
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  .header-right-widgets {
+    margin-left: auto;
+    margin-right: 15px;
+  }
+}
+@media (max-width: 768px) {
+  .header-right-widgets {
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+  }
+  .logo {
+    font-size: 20px !important;
+    white-space: nowrap;
+  }
+  .brand-logo {
+    height: 32px !important;
+  }
+}
+@media (max-width: 480px) {
+  .logo {
+    font-size: 18px !important;
+  }
+  .view-toggle-container {
+    width: 80px;
+    height: 26px;
+    padding: 2px;
+  }
+  .view-toggle-slider {
+    width: 36px;
+    height: 20px;
+    top: 2px;
+    left: 2px;
+  }
+  .view-toggle-container.mode-2d .view-toggle-slider {
+    transform: translateX(38px);
+  }
+  .view-toggle-btn {
+    font-size: 9px;
+    line-height: 20px;
+  }
+}
+
+/* ==========================================
+   3D NEUMORPHIC / SOFT UI OVERRIDES
+   ========================================== */
+
+/* Left Sidebar Section Separation */
+.mode-3d .player-section {
+  border-right: none !important;
+  box-shadow: 6px 0 20px rgba(0, 0, 0, 0.8), 1px 0 0 rgba(255, 255, 255, 0.04) !important;
+}
+
+/* Video Player Container outset */
+.mode-3d .video-container {
+  box-shadow: 10px 10px 24px rgba(0, 0, 0, 0.7), -10px -10px 24px rgba(255, 255, 255, 0.035), inset 0 0 0 1px rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+}
+.mode-3d .video-container:hover {
+  box-shadow: 14px 14px 28px rgba(0, 0, 0, 0.8), -14px -14px 28px rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(-3px) !important;
+}
+
+/* Custom Controls Panel outset */
+.mode-3d .custom-controls {
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.7), -8px -8px 20px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.02) !important;
+  border: none !important;
+}
+
+/* Control Buttons outset/inset */
+.mode-3d .control-btn {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6), -4px -4px 10px rgba(255, 255, 255, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+  border: none !important;
+  background: rgba(255, 255, 255, 0.06) !important;
+  transition: all var(--transition-fast) !important;
+}
+.mode-3d .control-btn:hover {
+  box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.7), -6px -6px 14px rgba(255, 255, 255, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.08) !important;
+  transform: scale(1.1) translateY(-2px) !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+}
+.mode-3d .control-btn:active {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.8), inset -4px -4px 8px rgba(255, 255, 255, 0.02) !important;
+  transform: scale(0.96) translateY(0) !important;
+}
+
+.mode-3d .control-btn.play-pause-btn {
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.65), -5px -5px 12px rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.2) !important;
+  border: none !important;
+  color: white !important;
+}
+.mode-3d .control-btn.play-pause-btn:hover {
+  box-shadow: 7px 7px 16px rgba(0, 0, 0, 0.7), -7px -7px 16px rgba(255, 255, 255, 0.12), inset 0 0 0 1px rgba(255, 255, 255, 0.3) !important;
+  color: white !important;
+}
+.mode-3d .control-btn.play-pause-btn:active {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.7), inset -4px -4px 8px rgba(255, 255, 255, 0.05) !important;
+  color: white !important;
+}
+
+/* Current Channel Card outset */
+.mode-3d .current-channel-card {
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.7), -8px -8px 20px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.02) !important;
+  border: none !important;
+}
+
+/* Recessed Current Channel Logo container */
+.mode-3d .current-channel-logo-container {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.6), inset -4px -4px 8px rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+}
+.mode-3d .current-channel-logo-container img {
+  border-radius: 10px !important;
+}
+
+/* Stats Card outset */
+.mode-3d .stats-card {
+  box-shadow: 6px 6px 16px rgba(0, 0, 0, 0.65), -6px -6px 16px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.02) !important;
+  border: none !important;
+}
+
+/* Recessed Search Input */
+.mode-3d .search-wrapper input {
+  box-shadow: inset 6px 6px 14px rgba(0, 0, 0, 0.7), inset -6px -6px 14px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.02) !important;
+  border: none !important;
+  background: rgba(10, 10, 15, 0.45) !important;
+}
+.mode-3d .search-wrapper input:focus {
+  box-shadow: inset 6px 6px 14px rgba(0, 0, 0, 0.8), inset -6px -6px 14px rgba(255, 255, 255, 0.04), inset 0 0 0 1px rgba(0, 242, 254, 0.25) !important;
+}
+
+/* Category Pills outset/inset */
+.mode-3d .category-pill {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6), -4px -4px 10px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+}
+.mode-3d .category-pill:hover {
+  box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.7), -6px -6px 14px rgba(255, 255, 255, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+  transform: translateY(-2px) !important;
+}
+.mode-3d .category-pill:active {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.7), inset -3px -3px 6px rgba(255, 255, 255, 0.02) !important;
+  transform: translateY(0) !important;
+}
+.mode-3d .category-pill.active {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%) !important;
+  box-shadow: inset 3px 3px 8px rgba(0, 0, 0, 0.4), inset -3px -3px 8px rgba(255, 255, 255, 0.15), 0 4px 12px var(--primary-glow) !important;
+  border: none !important;
+}
+
+/* Scroll Indicators outset */
+.mode-3d .scroll-indicator {
+  box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.6), -4px -4px 10px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+  border: none !important;
+  transition: all var(--transition-fast) !important;
+}
+.mode-3d .scroll-indicator:hover {
+  box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.7), -6px -6px 14px rgba(255, 255, 255, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+  transform: translateY(-50%) scale(1.12) !important;
+}
+.mode-3d .scroll-indicator:active {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.7), inset -3px -3px 6px rgba(255, 255, 255, 0.02) !important;
+  transform: translateY(-50%) scale(0.96) !important;
+}
+
+/* Channel Cards outset */
+.mode-3d .channel {
+  box-shadow: 6px 6px 14px rgba(0, 0, 0, 0.6), -6px -6px 14px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+  background: var(--bg-card) !important;
+}
+.mode-3d .channel:hover {
+  box-shadow: 10px 10px 20px rgba(0, 0, 0, 0.75), -10px -10px 20px rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(-5px) scale(1.04) !important;
+  background: var(--bg-card-hover) !important;
+}
+.mode-3d .channel:active {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.8), inset -4px -4px 8px rgba(255, 255, 255, 0.02) !important;
+  transform: translateY(0) scale(0.98) !important;
+}
+.mode-3d .channel.active {
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.8), inset -4px -4px 10px rgba(255, 0, 127, 0.1), 0 0 25px rgba(255, 0, 127, 0.25) !important;
+  background: var(--bg-card-hover) !important;
+}
+
+/* Main Footer outset */
+.mode-3d .main-footer {
+  box-shadow: 10px 10px 25px rgba(0, 0, 0, 0.7), -10px -10px 25px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.02) !important;
+  border: none !important;
+}
+.mode-3d .main-footer:hover {
+  border: none !important;
+  box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.75), -12px -12px 30px rgba(255, 255, 255, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.03) !important;
+}
+
+/* Social Buttons outset/inset (white circular) */
+.mode-3d .social-btn {
+  background: linear-gradient(135deg, #ffffff 0%, #e3e3ea 100%) !important;
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.6), -3px -3px 8px rgba(255, 255, 255, 0.04), inset -3px -3px 6px rgba(0, 0, 0, 0.15), inset 3px 3px 6px rgba(255, 255, 255, 0.8) !important;
+  border: none !important;
+}
+.mode-3d .social-btn:hover {
+  background: linear-gradient(135deg, #ffffff 0%, #ececf3 100%) !important;
+  box-shadow: 7px 7px 16px rgba(0, 0, 0, 0.7), -4px -4px 12px rgba(255, 255, 255, 0.06), inset -3px -3px 6px rgba(0, 0, 0, 0.12), inset 3px 3px 6px rgba(255, 255, 255, 0.9) !important;
+  transform: scale(1.22) translateY(-6px) !important;
+}
+.mode-3d .social-btn:active {
+  background: linear-gradient(135deg, #dcdce5 0%, #ffffff 100%) !important;
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.25), inset -4px -4px 8px rgba(255, 255, 255, 0.7) !important;
+  transform: scale(0.96) translateY(0) !important;
+}
+
+/* Custom Modal Card outset */
+.mode-3d .custom-modal-card {
+  box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.8), -12px -12px 30px rgba(255, 255, 255, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+}
+
+/* Custom Modal Close Button */
+.mode-3d .custom-modal-close-btn {
+  box-shadow: 3px 3px 6px rgba(0, 0, 0, 0.6), -3px -3px 6px rgba(255, 255, 255, 0.03), inset 0 0 0 1px rgba(255, 255, 255, 0.04) !important;
+  border: none !important;
+}
+.mode-3d .custom-modal-close-btn:hover {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.7), -4px -4px 8px rgba(255, 255, 255, 0.05), inset 0 0 0 1px rgba(255, 255, 255, 0.06) !important;
+}
+.mode-3d .custom-modal-close-btn:active {
+  box-shadow: inset 2px 2px 4px rgba(0, 0, 0, 0.8), inset -2px -2px 4px rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Custom Modal Footer Buttons */
+.mode-3d .custom-modal-btn {
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.65), -5px -5px 12px rgba(255, 255, 255, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  border: none !important;
+}
+.mode-3d .custom-modal-btn:hover {
+  box-shadow: 7px 7px 16px rgba(0, 0, 0, 0.7), -7px -7px 16px rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-2px) !important;
+}
+.mode-3d .custom-modal-btn:active {
+  box-shadow: inset 4px 4px 8px rgba(0, 0, 0, 0.7), inset -4px -4px 8px rgba(255, 255, 255, 0.05) !important;
+  transform: translateY(0) !important;
+}
+
+/* Back To Top Button outset */
+.mode-3d .back-to-top {
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.6), -5px -5px 12px rgba(255, 255, 255, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+}
+.mode-3d .back-to-top:hover {
+  box-shadow: 7px 7px 15px rgba(0, 0, 0, 0.7), -7px -7px 15px rgba(255, 255, 255, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+}
+.mode-3d .back-to-top:active {
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.8), inset -3px -3px 6px rgba(255, 255, 255, 0.02) !important;
+}
+
+/* Recessed Live Badge in 3D Mode */
+.mode-3d .header-live-badge {
+  box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.6), inset -2px -2px 5px rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+  background: rgba(10, 10, 15, 0.45) !important;
+}
+
