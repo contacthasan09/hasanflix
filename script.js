@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
   setupFooterFeatures();
   setupViewModeToggle();
   setupMobileAppBanner();
+  checkForUpdates();
 });
 
 /* DETECT NATIVE FULLSCREEN EXIT TO UNLOCK ORIENTATION & HANDLE BACK BUTTON */
@@ -978,6 +979,7 @@ window.addEventListener("keydown", (e) => {
   if (e.key === "Escape") {
     closeInfoModal();
     closeWarningModal();
+    closeUpdateModal();
   }
 });
 
@@ -1067,5 +1069,66 @@ function closeAppBanner() {
   if (banner) {
     banner.classList.add("hidden");
     localStorage.setItem("alpha_tv_hide_app_banner", "true");
+  }
+}
+
+/* IN-APP UPDATE CHECKER (ANDROID APP ONLY) */
+const currentBuildCode = 5; // Matches version 1.0.4 build code
+
+function checkForUpdates() {
+  if (!window.Capacitor) return;
+
+  const configUrl = "https://raw.githubusercontent.com/Shariar-Ahamed/online-tv-streaming-platform/main/app-update.json";
+
+  fetch(configUrl)
+    .then(response => {
+      if (!response.ok) throw new Error("Update config response error");
+      return response.json();
+    })
+    .then(data => {
+      if (data && data.buildCode && data.buildCode > currentBuildCode) {
+        showUpdateModal(data);
+      }
+    })
+    .catch(err => {
+      console.warn("Failed to check for remote app updates:", err);
+    });
+}
+
+function showUpdateModal(updateData) {
+  const modal = document.getElementById("updateModal");
+  const changelog = document.getElementById("updateChangelog");
+  const downloadLink = document.getElementById("updateDownloadLink");
+
+  if (!modal) return;
+
+  if (changelog && updateData.changelog) {
+    changelog.innerHTML = "";
+    const lines = updateData.changelog.split("\n");
+    lines.forEach(line => {
+      if (line.trim()) {
+        const p = document.createElement("p");
+        p.className = "changelog-item";
+        p.innerText = line;
+        changelog.appendChild(p);
+      }
+    });
+  }
+
+  if (downloadLink && updateData.downloadUrl) {
+    downloadLink.setAttribute("href", updateData.downloadUrl);
+  }
+
+  modal.classList.remove("hidden");
+  modal.setAttribute("aria-hidden", "false");
+  document.body.style.overflow = "hidden";
+}
+
+function closeUpdateModal() {
+  const modal = document.getElementById("updateModal");
+  if (modal) {
+    modal.classList.add("hidden");
+    modal.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
   }
 }

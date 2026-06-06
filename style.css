@@ -2416,8 +2416,135 @@ video {
 
 /* OFFICIAL BRAND GREEN FOR ANDROID ICON */
 .banner-download-btn .fa-android,
-.warning-app-download-btn .fa-android {
+.warning-app-download-btn .fa-android,
+.update-download-btn .fa-android {
   color: #3ddc84 !important;
   filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.25));
+}
+
+/* IN-APP UPDATE MODAL STYLING */
+.update-modal-card {
+  max-width: 480px !important;
+}
+
+.update-modal-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-bottom: 12px;
+}
+
+.update-modal-icon {
+  font-size: 24px;
+  color: var(--secondary);
+  animation: rocketFloat 2s infinite ease-in-out;
+}
+
+@keyframes rocketFloat {
+  0% { transform: translateY(0) rotate(0deg); }
+  50% { transform: translateY(-4px) rotate(4deg); }
+  100% { transform: translateY(0) rotate(0deg); }
+}
+
+.update-modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--text-primary) !important;
+  margin: 0;
+}
+
+.update-modal-content {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-top: 15px;
+}
+
+.update-main-text {
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  font-weight: 400;
+}
+
+.update-changelog-container {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.changelog-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.update-changelog {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.changelog-item {
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.update-modal-footer {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  width: 100%;
+}
+
+.update-download-btn {
+  background: #ff6d00 !important;
+  color: white !important;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 10px 16px !important;
+  border-radius: 12px !important;
+  box-shadow: 0 4px 15px rgba(255, 110, 0, 0.25) !important;
+  transition: all var(--transition-fast) !important;
+  height: 40px;
+  margin: 0;
+}
+
+.update-download-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(255, 110, 0, 0.4) !important;
+}
+
+/* 3D Neumorphic update modal overrides */
+.mode-3d .update-modal-card {
+  box-shadow: 12px 12px 30px rgba(0, 0, 0, 0.8), -12px -12px 30px rgba(255, 255, 255, 0.04), inset 0 0 0 1px rgba(255, 255, 255, 0.03) !important;
+  border: none !important;
+  background: #0f0b0f !important;
+}
+
+.mode-3d .update-download-btn {
+  box-shadow: 5px 5px 12px rgba(0, 0, 0, 0.65), -5px -5px 12px rgba(255, 255, 255, 0.06), inset 0 0 0 1px rgba(255, 255, 255, 0.1) !important;
+  border: none !important;
+  background: #ff6d00 !important;
+}
+
+.mode-3d .update-download-btn:hover {
+  box-shadow: 7px 7px 16px rgba(0, 0, 0, 0.7), -7px -7px 16px rgba(255, 255, 255, 0.08), inset 0 0 0 1px rgba(255, 255, 255, 0.15) !important;
+  transform: translateY(-2px) !important;
 }
 

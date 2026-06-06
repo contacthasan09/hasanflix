@@ -530,6 +530,35 @@
       </div>
     </div>
 
+    <!-- In-App Update Modal (Android Only) -->
+    <div id="updateModal" class="custom-modal hidden" aria-hidden="true">
+      <div class="custom-modal-overlay" onclick="closeUpdateModal()"></div>
+      <div class="custom-modal-card update-modal-card">
+        <button class="custom-modal-close-btn" onclick="closeUpdateModal()" aria-label="Close">
+          <i class="fa-solid fa-xmark"></i>
+        </button>
+        <div class="custom-modal-header update-modal-header">
+          <i class="fa-solid fa-rocket update-modal-icon"></i>
+          <h2 id="updateModalTitle">নতুন আপডেট উপলব্ধ!</h2>
+        </div>
+        <div class="custom-modal-content update-modal-content">
+          <p class="update-main-text">অ্যাপটি নির্বিঘ্নে ব্যবহার করতে এবং নতুন ফিচার উপভোগ করতে এখনই লেটেস্ট সংস্করণটি ডাউনলোড করুন।</p>
+          <div class="update-changelog-container">
+            <p class="changelog-title">নতুন সংস্করণে কী কী পরিবর্তন করা হয়েছে:</p>
+            <div id="updateChangelog" class="update-changelog">
+              <!-- Changelog details will be dynamically injected here -->
+            </div>
+          </div>
+        </div>
+        <div class="custom-modal-footer update-modal-footer">
+          <a id="updateDownloadLink" href="#" class="custom-modal-btn update-download-btn" target="_blank">
+            <i class="fa-brands fa-android"></i> Update Now
+          </a>
+          <button class="custom-modal-btn update-later-btn" onclick="closeUpdateModal()">Later</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Mobile Smart App Banner -->
     <div id="mobileAppBanner" class="mobile-app-banner hidden">
       <div class="banner-content">
