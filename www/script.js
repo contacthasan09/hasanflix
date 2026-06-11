@@ -214,85 +214,144 @@ function setupControlAutohide() {
   playerWrapper.addEventListener("touchstart", showControls);
 }
 
-/* LOAD M3U PLAYLIST */
+/* PARSE M3U PLAYLIST DATA */
+function parseM3U(data) {
+  const lines = data.split("\n");
+  const parsedChannels = [];
+
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i].trim();
+    if (line.startsWith("#EXTINF")) {
+      const info = line;
+
+      // Find the next non-empty line that doesn't start with '#'
+      let url = "";
+      for (let j = i + 1; j < lines.length; j++) {
+        const nextLine = lines[j].trim();
+        if (nextLine && !nextLine.startsWith("#")) {
+          url = nextLine;
+          break;
+        }
+      }
+
+      if (!url) continue;
+
+      // Extract name (part after the last comma)
+      const nameParts = info.split(",");
+      const name = nameParts[nameParts.length - 1].trim() || "Unknown Channel";
+
+      let logo = "";
+      const logoMatch = info.match(/tvg-logo="([^"]*)"/);
+      if (logoMatch) {
+        logo = logoMatch[1].trim();
+      }
+
+      let categories = ["Other"];
+      const groupMatch = info.match(/group-title="([^"]*)"/);
+      if (groupMatch) {
+        categories = groupMatch[1].split(",").map(c => c.trim()).filter(Boolean);
+        if (categories.length === 0) {
+          categories = ["Other"];
+        }
+      }
+
+      parsedChannels.push({
+        name,
+        url,
+        logo,
+        categories
+      });
+    }
+  }
+  return parsedChannels;
+}
+
+/* LOAD M3U PLAYLIST (Instant local load, background online update) */
 function loadPlaylist() {
   const loader = document.getElementById("playerLoader");
   if (!loader) return;
   loader.classList.remove("hidden");
   loader.querySelector("span").innerText = "Loading playlist...";
 
-  fetch(`${playlistOnline}?t=${new Date().getTime()}`)
+  // 1. Fetch the bundled local playlist immediately (instant, offline-capable)
+  fetch(playlistLocal)
     .then(response => {
-      if (!response.ok) {
-        throw new Error("Online playlist response error");
-      }
+      if (!response.ok) throw new Error("Local playlist response error");
       return response.text();
     })
-    .catch(err => {
-      console.log("Could not load online playlist, falling back to local file...", err);
-      return fetch(playlistLocal).then(response => response.text());
-    })
-    .then((data) => {
-      const lines = data.split("\n");
-      channels = [];
+    .then(localData => {
+      const parsedLocal = parseM3U(localData);
+      if (parsedLocal.length > 0) {
+        channels = parsedLocal;
+        loader.classList.add("hidden");
+        renderCategories();
+        filterAndSearch();
 
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
-        if (line.startsWith("#EXTINF")) {
-          const info = line;
-
-          // Find the next non-empty line that doesn't start with '#'
-          let url = "";
-          for (let j = i + 1; j < lines.length; j++) {
-            const nextLine = lines[j].trim();
-            if (nextLine && !nextLine.startsWith("#")) {
-              url = nextLine;
-              break;
-            }
-          }
-
-          if (!url) continue;
-
-          // Extract name (part after the last comma)
-          const nameParts = info.split(",");
-          const name = nameParts[nameParts.length - 1].trim() || "Unknown Channel";
-
-          let logo = "";
-          const logoMatch = info.match(/tvg-logo="([^"]*)"/);
-          if (logoMatch) {
-            logo = logoMatch[1].trim();
-          }
-
-          let categories = ["Other"];
-          const groupMatch = info.match(/group-title="([^"]*)"/);
-          if (groupMatch) {
-            categories = groupMatch[1].split(",").map(c => c.trim()).filter(Boolean);
-            if (categories.length === 0) {
-              categories = ["Other"];
-            }
-          }
-
-          channels.push({
-            name,
-            url,
-            logo,
-            categories
-          });
+        // Start playing the default channel
+        if (filteredChannels.length > 0) {
+          const defaultIndex = filteredChannels.findIndex(c => c.name.toLowerCase().includes("channel i"));
+          playChannel(defaultIndex !== -1 ? defaultIndex : 0);
         }
       }
+      // 2. Fetch remote online playlist in the background
+      fetchOnlinePlaylistInBackground();
+    })
+    .catch(err => {
+      console.warn("Failed to load local playlist first, attempting online fetch directly:", err);
+      // Fallback: try online playlist directly if local fails
+      fetch(`${playlistOnline}?t=${new Date().getTime()}`)
+        .then(response => {
+          if (!response.ok) throw new Error("Online playlist response error");
+          return response.text();
+        })
+        .then(onlineData => {
+          const parsedOnline = parseM3U(onlineData);
+          if (parsedOnline.length > 0) {
+            channels = parsedOnline;
+          }
+          loader.classList.add("hidden");
+          renderCategories();
+          filterAndSearch();
+          if (filteredChannels.length > 0) {
+            const defaultIndex = filteredChannels.findIndex(c => c.name.toLowerCase().includes("channel i"));
+            playChannel(defaultIndex !== -1 ? defaultIndex : 0);
+          }
+        })
+        .catch(finalErr => {
+          console.error("Failed to load playlist entirely", finalErr);
+          loader.querySelector("span").innerText = "Failed to load playlist ⚠️";
+        });
+    });
+}
 
-      loader.classList.add("hidden");
-      renderCategories();
-      filterAndSearch();
+/* FETCH REMOTE PLAYLIST IN BACKGROUND AND SILENTLY UPDATE UI */
+function fetchOnlinePlaylistInBackground() {
+  fetch(`${playlistOnline}?t=${new Date().getTime()}`)
+    .then(response => {
+      if (!response.ok) throw new Error("Background online playlist fetch failed");
+      return response.text();
+    })
+    .then(onlineData => {
+      const parsedOnline = parseM3U(onlineData);
+      if (parsedOnline.length === 0) return;
 
-      if (filteredChannels.length > 0) {
-        const defaultIndex = filteredChannels.findIndex(c => c.name.toLowerCase().includes("channel i"));
-        playChannel(defaultIndex !== -1 ? defaultIndex : 0);
+      // Compare online playlist length and entries to detect differences
+      const isDifferent = channels.length !== parsedOnline.length ||
+                          channels.some((c, idx) => !parsedOnline[idx] || c.url !== parsedOnline[idx].url || c.name !== parsedOnline[idx].name);
+
+      if (isDifferent) {
+        console.log("Online playlist updates detected. Updating channels list in background.");
+        channels = parsedOnline;
+
+        // Re-render categories list and channels grid
+        renderCategories();
+        filterAndSearch();
+      } else {
+        console.log("Background check complete. Playlist is up-to-date.");
       }
     })
     .catch(err => {
-      console.error("Failed to load playlist", err);
-      loader.querySelector("span").innerText = "Failed to load playlist ⚠️";
+      console.warn("Background online playlist fetch failed:", err);
     });
 }
 
@@ -1194,7 +1253,7 @@ function closeAppBanner() {
 }
 
 /* IN-APP UPDATE CHECKER (ANDROID APP ONLY) */
-const currentBuildCode = 13; // Matches version 1.1.2 build code
+const currentBuildCode = 14; // Matches version 1.1.3 build code
 
 function checkForUpdates() {
   if (!window.Capacitor) return;
