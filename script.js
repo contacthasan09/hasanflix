@@ -10,7 +10,7 @@ let currentChannel = null;
 let currentCategory = "All";
 let favorites = [];
 try {
-  const saved = localStorage.getItem("hasanflix_favorites");
+  const saved = localStorage.getItem("hasanstream_favorites");
   if (saved) {
     favorites = JSON.parse(saved);
   }
@@ -164,7 +164,7 @@ function setupPlayerSync() {
 function setupVolumeControl() {
   const video = document.getElementById("video");
   if (!video) return;
-  const isMutedSaved = localStorage.getItem("hasanflix_muted") === "true";
+  const isMutedSaved = localStorage.getItem("hasanstream_muted") === "true";
   video.muted = isMutedSaved;
   updateVolumeButtonState(isMutedSaved);
 
@@ -177,7 +177,7 @@ function toggleMute() {
   const video = document.getElementById("video");
   if (!video) return;
   video.muted = !video.muted;
-  localStorage.setItem("hasanflix_muted", video.muted);
+  localStorage.setItem("hasanstream_muted", video.muted);
 }
 
 function updateVolumeButtonState(isMuted) {
@@ -541,7 +541,7 @@ function toggleFavorite(event, url) {
     favorites.splice(index, 1);
   }
   
-  localStorage.setItem("hasanflix_favorites", JSON.stringify(favorites));
+  localStorage.setItem("hasanstream_favorites", JSON.stringify(favorites));
   updateFavoritesCount();
   filterAndSearch();
 }
@@ -1149,8 +1149,8 @@ function showTermsModal(type, event) {
   
   const title = type === "privacy" ? "Privacy Policy" : "Terms of Service";
   const text = type === "privacy" 
-    ? "At HasanFlix, we value your privacy. We do not collect or store any personal data. All streams are sourced from third-party public playlists and played locally in your browser or application. Your preferences are saved only on your local device."
-    : "Welcome to HasanFlix! Our services are provided free of charge for streaming live channels. We do not host any of the video content; all streams are sourced from publicly available public playlists. By using this app, you agree to comply with your local copyright and streaming laws.";
+    ? "At HasanStream, we value your privacy. We do not collect or store any personal data. All streams are sourced from third-party public playlists and played locally in your browser or application. Your preferences are saved only on your local device."
+    : "Welcome to HasanStream! Our services are provided free of charge for streaming live channels. We do not host any of the video content; all streams are sourced from publicly available public playlists. By using this app, you agree to comply with your local copyright and streaming laws.";
   
   const modal = document.getElementById("infoModal");
   const modalTitle = document.getElementById("modalTitle");
@@ -1256,7 +1256,7 @@ function setupMobileAppBanner() {
     });
 
   const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || window.innerWidth < 768;
-  const isBannerHidden = localStorage.getItem("hasanflix_hide_app_banner") === "true";
+  const isBannerHidden = localStorage.getItem("hasanstream_hide_app_banner") === "true";
 
   if (isMobile && !isBannerHidden) {
     const banner = document.getElementById("mobileAppBanner");
@@ -1272,7 +1272,7 @@ function closeAppBanner() {
   const banner = document.getElementById("mobileAppBanner");
   if (banner) {
     banner.classList.add("hidden");
-    localStorage.setItem("hasanflix_hide_app_banner", "true");
+    localStorage.setItem("hasanstream_hide_app_banner", "true");
   }
 }
 
@@ -1295,8 +1295,8 @@ function checkForUpdates() {
         showHeaderUpdateNotification(data);
 
         // Check if the user clicked "Later" for this exact build code in the last 36 hours
-        const laterTime = localStorage.getItem("hasanflix_update_later_time");
-        const laterBuild = localStorage.getItem("hasanflix_update_later_build");
+        const laterTime = localStorage.getItem("hasanstream_update_later_time");
+        const laterBuild = localStorage.getItem("hasanstream_update_later_build");
         
         if (laterBuild && parseInt(laterBuild) === data.buildCode && laterTime) {
           const timeDiff = Date.now() - parseInt(laterTime);
@@ -1379,8 +1379,8 @@ function closeUpdateModal() {
     // Save skip state in localStorage if we skip this update
     const updateBuild = modal.dataset.updateBuild;
     if (updateBuild) {
-      localStorage.setItem("hasanflix_update_later_time", Date.now().toString());
-      localStorage.setItem("hasanflix_update_later_build", updateBuild);
+      localStorage.setItem("hasanstream_update_later_time", Date.now().toString());
+      localStorage.setItem("hasanstream_update_later_build", updateBuild);
     }
   }
 }
@@ -1402,7 +1402,7 @@ function handleUpdateDownload(event) {
 
 /* DISCLAIMER POPUP MODAL LOGIC */
 function checkDisclaimer() {
-  const accepted = localStorage.getItem("hasanflix_disclaimer_accepted");
+  const accepted = localStorage.getItem("hasanstream_disclaimer_accepted");
   if (!accepted) {
     const modal = document.getElementById("disclaimerModal");
     if (modal) {
@@ -1414,7 +1414,7 @@ function checkDisclaimer() {
 }
 
 function acceptDisclaimer() {
-  localStorage.setItem("hasanflix_disclaimer_accepted", "true");
+  localStorage.setItem("hasanstream_disclaimer_accepted", "true");
   closeDisclaimerModal();
 }
 
